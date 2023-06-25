@@ -1,4 +1,4 @@
-use hecs::*;
+use despero_hecs::*;
 use std::sync::{Arc, Mutex};
 
 fn main() {

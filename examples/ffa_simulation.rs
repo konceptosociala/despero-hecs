@@ -1,4 +1,4 @@
-use hecs::*;
+use despero_hecs::*;
 use rand::{thread_rng, Rng};
 use std::io;
 
@@ -62,7 +62,7 @@ fn batch_spawn_entities(world: &mut World, n: usize) {
 fn system_integrate_motion(world: &mut World, query: &mut PreparedQuery<(&mut Position, &Speed)>) {
     let mut rng = thread_rng();
 
-    for (id, (pos, s)) in query.query_mut(world) {
+    for (id, (mut pos, s)) in query.query_mut(world) {
         let change = (rng.gen_range(-s.0..s.0), rng.gen_range(-s.0..s.0));
         pos.x += change.0;
         pos.y += change.1;
@@ -72,7 +72,7 @@ fn system_integrate_motion(world: &mut World, query: &mut PreparedQuery<(&mut Po
 
 // In this system entities find the closest entity and fire at them
 fn system_fire_at_closest(world: &mut World) {
-    for (id0, (pos0, dmg0, kc0)) in
+    for (id0, (pos0, dmg0, mut kc0)) in
         &mut world.query::<With<(&Position, &Damage, &mut KillCount), &Health>>()
     {
         // Find closest:
