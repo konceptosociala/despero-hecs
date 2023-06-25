@@ -1,4 +1,4 @@
-use despero_hecs::*;
+use sonja_hecs::*;
 use rand::{thread_rng, Rng};
 use std::io;
 

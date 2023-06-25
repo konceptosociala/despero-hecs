@@ -8,7 +8,7 @@
 
 use std::borrow::Cow;
 
-use despero_hecs::*;
+use sonja_hecs::*;
 
 #[test]
 fn random_access() {
