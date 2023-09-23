@@ -5,8 +5,10 @@
 // http://opensource.org/licenses/MIT>, at your option. This file may not be
 // copied, modified, or distributed except according to those terms.
 
+extern crate despero_hecs as hecs;
+
 use bencher::{benchmark_group, benchmark_main, Bencher};
-use despero_hecs::*;
+use hecs::*;
 
 #[derive(Clone)]
 struct Position(f32);
@@ -119,7 +121,7 @@ fn iterate_100k(b: &mut Bencher) {
         world.spawn((Position(-(i as f32)), Velocity(i as f32)));
     }
     b.iter(|| {
-        for (_, (pos, vel)) in &mut world.query::<(&mut Position, &Velocity)>() {
+        for (_, (mut pos, vel)) in &mut world.query::<(&mut Position, &Velocity)>() {
             pos.0 += vel.0;
         }
     })
@@ -131,7 +133,7 @@ fn iterate_mut_100k(b: &mut Bencher) {
         world.spawn((Position(-(i as f32)), Velocity(i as f32)));
     }
     b.iter(|| {
-        for (_, (pos, vel)) in world.query_mut::<(&mut Position, &Velocity)>() {
+        for (_, (mut pos, vel)) in world.query_mut::<(&mut Position, &Velocity)>() {
             pos.0 += vel.0;
         }
     })
@@ -176,7 +178,7 @@ fn iterate_uncached_100_by_50(b: &mut Bencher) {
     let mut world = World::new();
     spawn_100_by_50(&mut world);
     b.iter(|| {
-        for (_, (pos, vel)) in world.query::<(&mut Position, &Velocity)>().iter() {
+        for (_, (mut pos, vel)) in world.query::<(&mut Position, &Velocity)>().iter() {
             pos.0 += vel.0;
         }
     })
@@ -188,7 +190,7 @@ fn iterate_cached_100_by_50(b: &mut Bencher) {
     let mut query = PreparedQuery::<(&mut Position, &Velocity)>::default();
     let _ = query.query(&world).iter();
     b.iter(|| {
-        for (_, (pos, vel)) in query.query(&world).iter() {
+        for (_, (mut pos, vel)) in query.query(&world).iter() {
             pos.0 += vel.0;
         }
     })
@@ -198,7 +200,7 @@ fn iterate_mut_uncached_100_by_50(b: &mut Bencher) {
     let mut world = World::new();
     spawn_100_by_50(&mut world);
     b.iter(|| {
-        for (_, (pos, vel)) in world.query_mut::<(&mut Position, &Velocity)>() {
+        for (_, (mut pos, vel)) in world.query_mut::<(&mut Position, &Velocity)>() {
             pos.0 += vel.0;
         }
     })
@@ -210,7 +212,7 @@ fn iterate_mut_cached_100_by_50(b: &mut Bencher) {
     let mut query = PreparedQuery::<(&mut Position, &Velocity)>::default();
     let _ = query.query_mut(&mut world);
     b.iter(|| {
-        for (_, (pos, vel)) in query.query_mut(&mut world) {
+        for (_, (mut pos, vel)) in query.query_mut(&mut world) {
             pos.0 += vel.0;
         }
     })

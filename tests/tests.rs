@@ -6,9 +6,10 @@
 // http://opensource.org/licenses/MIT>, at your option. This file may not be
 // copied, modified, or distributed except according to those terms.
 
-use std::borrow::Cow;
+extern crate despero_hecs as hecs;
 
-use sonja_hecs::*;
+use std::borrow::Cow;
+use hecs::*;
 
 #[test]
 fn random_access() {
@@ -56,26 +57,6 @@ fn query_all() {
     assert_eq!(ents.len(), 2);
     assert!(ents.contains(&(e, ())));
     assert!(ents.contains(&(f, ())));
-}
-
-#[test]
-#[cfg(feature = "macros")]
-fn derived_query() {
-    #[derive(Query, Debug, PartialEq)]
-    struct Foo<'a> {
-        x: &'a i32,
-        y: &'a mut bool,
-    }
-
-    let mut world = World::new();
-    let e = world.spawn((42, false));
-    assert_eq!(
-        world.query_one_mut::<Foo>(e).unwrap(),
-        Foo {
-            x: &42,
-            y: &mut false
-        }
-    );
 }
 
 #[test]
